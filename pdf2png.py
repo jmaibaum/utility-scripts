@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
 # Needs imagemagick to work (convert does the image conversion).
-# Usage: ./pdf2png.py <PDF-File> <Number of Pages>
+# Usage: ./pdf2png.py <PDF-File>
 
 import os.path, subprocess, sys
+from PyPDF2 import PdfFileReader
 
 def convert_job(page):
     convert_args = ['convert', '-units', 'PixelsPerInch', '-density', '300',
@@ -26,12 +27,12 @@ if __name__ == '__main__':
             filename = sys.argv[1]
             basename = os.path.basename(os.path.splitext(filename)[0])
 
-            if argc == 2:
-                pages = int(sys.argv[2])
-                pagenum_digits = len(sys.argv[2])
-            #else:
-            #    pages = count_pages(filename)
+            # Get page count
+            with open(filename, 'rb') as pdfFile:
+                pdfReader = PdfFileReader(pdfFile)
+                pages = pdfReader.getNumPages()
 
+            pagenum_digits = len(str(pages))
             pagenum_format = '{{:{}d}}'.format(pagenum_digits)
             pagenum_format_lz = '{{:0{}d}}'.format(pagenum_digits)
             pages_of_pages = pagenum_format + ' of ' + pagenum_format
