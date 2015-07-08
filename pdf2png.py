@@ -35,7 +35,7 @@ if __name__ == '__main__':
             pagenum_digits = len(str(pages))
             pagenum_format = '{{:{}d}}'.format(pagenum_digits)
             pagenum_format_lz = '{{:0{}d}}'.format(pagenum_digits)
-            pages_of_pages = pagenum_format + ' of ' + pagenum_format
+            pages_of_pages = pagenum_format + ' of ' + pagenum_format + ' pages'
 
             print('Starting conversion of {} pages.'.format(pages))
 
