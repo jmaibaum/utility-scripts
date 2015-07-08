@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.4
+#!/usr/bin/env python3
 
 # Needs imagemagick to work (convert does the image conversion).
 # Usage: ./pdf2png.py <PDF-File> <Number of Pages>
