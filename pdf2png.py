@@ -6,10 +6,11 @@
 import os.path, subprocess, sys
 
 def convert_job(page):
-    convert_args = ['convert', '-units', 'PixelsPerInch', '-density', '400',
+    convert_args = ['convert', '-units', 'PixelsPerInch', '-density', '300',
                     '{}[{}]'.format(filename, page - 1), '-channel', 'RGBA',
-                    '-fill', 'white', '-opaque', 'none', '{}_{:03d}.png'.format(
-                        basename, page)]
+                    '-fill', 'white', '-opaque', 'none',
+                    '{}_'.format(basename) + pagenum_format_lz.format(page) +
+                    '.png']
     return subprocess.Popen(convert_args)
 
 if __name__ == '__main__':
@@ -27,14 +28,18 @@ if __name__ == '__main__':
 
             if argc == 2:
                 pages = int(sys.argv[2])
-                print("test")
-            else:
-                pages = count_pages(filename)
+                pagenum_digits = len(sys.argv[2])
+            #else:
+            #    pages = count_pages(filename)
+
+            pagenum_format = '{{:{}d}}'.format(pagenum_digits)
+            pagenum_format_lz = '{{:0{}d}}'.format(pagenum_digits)
+            pages_of_pages = pagenum_format + ' of ' + pagenum_format
 
             print('Starting conversion of {} pages.'.format(pages))
 
-            print('\r{:3d} of {:3d} pages converted.'.format(finished_jobs,
-                                                             pages), end='')
+            print('\r' + pages_of_pages.format(finished_jobs, pages)
+                  + ' converted.', end='')
 
             while finished_jobs < pages:
                 if next_job <= pages and len(children) < max_children:
@@ -47,8 +52,8 @@ if __name__ == '__main__':
                     wait_for_me = children.pop(0)
                     wait_for_me.wait()
                     finished_jobs += 1
-                    print('\r{:3d} of {:3d} pages converted.'.format(
-                        finished_jobs, pages), end='')
+                    print('\r' + pages_of_pages.format(finished_jobs, pages)
+                          + ' converted.', end='')
 
         else:
             print('Error: File "{}" does not exist!'.format(sys.argv[1]))
@@ -56,4 +61,4 @@ if __name__ == '__main__':
     else:
         print('Wrong number of arguments!')
 
-    print()
+    print()  # Newline before the next shell prompt.
