@@ -3,7 +3,7 @@
 # Needs imagemagick to work (convert does the image conversion).
 # Usage: ./pdf2png.py <PDF-File>
 
-import os.path, subprocess, sys
+import multiprocessing, os.path, subprocess, sys
 from PyPDF2 import PdfFileReader
 
 def convert_job(page):
@@ -16,7 +16,7 @@ def convert_job(page):
 
 if __name__ == '__main__':
     argc = len(sys.argv[1:])
-    max_children = 4
+    max_children = multiprocessing.cpu_count()
     children = []
     next_job = 1
     finished_jobs = 0
